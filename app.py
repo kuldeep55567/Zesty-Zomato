@@ -56,9 +56,25 @@ def hello_world():
 @app.route('/admin')
 def admin():
     conn = get_db_connection()
-    orders = conn.execute('SELECT * FROM orders').fetchall()
+    status_filter = request.args.get('statusFilter')
+    if status_filter and status_filter != 'all':
+        orders = conn.execute('SELECT * FROM orders WHERE status = ?', (status_filter,)).fetchall()
+    else:
+        orders = conn.execute('SELECT * FROM orders').fetchall()
+    orders_list = []
+    for order in orders:
+        dish_ids = order['dish_ids'].split(',')
+        total_price = 0.0
+        for dish_id in dish_ids:
+            dish = conn.execute('SELECT * FROM menu WHERE id = ?', (dish_id,)).fetchone()
+            if dish:
+                total_price += dish['price']
+        order_dict = dict(order)
+        order_dict['total_price'] = total_price
+        orders_list.append(order_dict)
     conn.close()
-    return render_template('admin.html', orders=orders)
+    return render_template('admin.html', orders=orders_list)
+
 
 
 @app.route('/add_dish', methods=['POST'])

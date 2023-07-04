@@ -42,25 +42,37 @@
           </div>
         </div>
       </nav>
+      <div class="filter-container">
+        <label for="statusFilter">Filter by Status:</label>
+        <select id="statusFilter" name="statusFilter">
+          <option value="all">All</option>
+          <option value="pending">Pending</option>
+          <option value="received">Received</option>
+          <option value="delivered">Delivered</option>
+        </select>
+        <button onclick="applyFilter()" class="btn btn-primary">Apply</button>
+      </div>
+      
       <h1>Admin Dashboard</h1>
       <h2>Review Orders</h2>
       <table>
         <tr>
-            <th>Order ID</th>
-            <th>Customer Name</th>
-            <th>Dish IDs</th>
-            <th>Status</th>
+          <th>Order ID</th>
+          <th>Customer Name</th>
+          <th>Dish IDs</th>
+          <th>Status</th>
+          <th>Total Price</th>
         </tr>
         {% for o in orders %}
         <tr>
-            <td>{{ o['id'] }}</td>
-            <td>{{ o['customer_name'] }}</td>
-            <td>{{ o['dish_ids'] }}</td>
-            <td>{{ o['status'] }}</td>
+          <td>{{ o['id'] }}</td>
+          <td>{{ o['customer_name'] }}</td>
+          <td>{{ o['dish_ids'] }}</td>
+          <td>{{ o['status'] }}</td>
+          <td>{{ o['total_price'] }}</td>
         </tr>
         {% endfor %}
-    </table>
-       
+      </table>
     <h2 id="adding">Menu Management</h2>
     <div id="hello">
       <button id="addDishBtn" class="toggle-btn active btn btn-success">Add Dish</button>
@@ -109,6 +121,10 @@
     integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz"
     crossorigin="anonymous"></script>
     <script>
+  function applyFilter() {
+    const statusFilter = document.getElementById('statusFilter').value;
+    window.location.href = '/admin?statusFilter=' + statusFilter;
+  }
       const addDishBtn = document.getElementById("addDishBtn");
   const removeDishBtn = document.getElementById("removeDishBtn");
   const updateStatusBtn = document.getElementById("updateStatusBtn");
