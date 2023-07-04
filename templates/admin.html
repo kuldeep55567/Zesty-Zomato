@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Create Entry</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
+      </head>
+<style>
+  body{
+    font-family: cursive;
+    background-color: rgb(238, 217, 217);
+  }
+  h1{
+    margin-top: 10px;
+    font-size: 60px;
+    text-align: center;
+    color: rgb(77, 75, 75);
+
+  }
+  h2{
+    text-align: center;
+    color: rgb(77, 75, 75);
+  }
+</style>
+<body>
+    <nav class="navbar navbar-expand-lg bg-body-tertiary">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="/">Home🏠</a>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav">
+              <li class="nav-item">
+                <a class="nav-link active" aria-current="page" href="/menu">Menu</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="/admin">Admin</a>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </nav>
+      <h1>Admin Dashboard</h1>
+      <h2>Review Orders</h2>
+      <table>
+        <tr>
+            <th>Order ID</th>
+            <th>Customer Name</th>
+            <th>Dish IDs</th>
+            <th>Status</th>
+        </tr>
+        {% for o in orders %}
+        <tr>
+            <td>{{ o['id'] }}</td>
+            <td>{{ o['customer_name'] }}</td>
+            <td>{{ o['dish_ids'] }}</td>
+            <td>{{ o['status'] }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+       
+    <h2 id="adding">Menu Management</h2>
+    <div id="hello">
+      <button id="addDishBtn" class="toggle-btn active btn btn-success">Add Dish</button>
+      <button id="removeDishBtn" class="toggle-btn btn btn-danger">Remove Dish</button>
+      <button id="updateStatusBtn" class="toggle-btn btn btn-warning">Update Order Status</button>
+    </div>
+    
+    <div id="addDishForm" class="toggle-form">
+      <h2 class="hii">Add Dish</h2>
+      <form action="/add_dish" method="POST">
+        <label for="name">Dish Name:</label>
+        <input type="text" id="name" name="name" required><br><br>
+        <label for="price">Price:</label>
+        <input type="number" id="price" name="price" min="0" step="0.01" required><br><br>
+        <label for="availability">Availability:</label>
+        <select id="availability" name="availability" required>
+          <option value="1">Available</option>
+          <option value="0">Not Available</option>
+        </select><br><br>
+        <button type="submit" class="btn btn-primary">Add Dish</button>
+      </form>
+    </div>
+    
+    <div id="removeDishForm" class="toggle-form" style="display: none;">
+      <h2 class="hii">Remove Dish</h2>
+      <form action="/remove_dish" method="POST">
+        <label for="dish_id">Dish ID:</label>
+        <input type="text" id="dish_id" name="dish_id" required><br><br>
+        <button type="submit" class="btn btn-primary">Remove Dish</button>
+      </form>
+    </div>
+    
+    <div id="updateStatusForm" class="toggle-form" style="display: none;">
+      <h2 class="hii">Update Order Status</h2>
+      <form action="/update_status" method="POST">
+        <label for="order_id">Order ID:</label>
+        <input type="text" id="order_id" name="order_id" required><br><br>
+        <label for="new_status">New Status:</label>
+        <input type="text" id="new_status" name="new_status" required><br><br>
+        <button type="submit" class="btn btn-primary">Update Status</button>
+      </form>
+    </div>
+    
+</body>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz"
+    crossorigin="anonymous"></script>
+    <script>
+      const addDishBtn = document.getElementById("addDishBtn");
+  const removeDishBtn = document.getElementById("removeDishBtn");
+  const updateStatusBtn = document.getElementById("updateStatusBtn");
+  const addDishForm = document.getElementById("addDishForm");
+  const removeDishForm = document.getElementById("removeDishForm");
+  const updateStatusForm = document.getElementById("updateStatusForm");
+
+  // Add event listeners to the buttons
+  addDishBtn.addEventListener("click", () => toggleForm(addDishForm));
+  removeDishBtn.addEventListener("click", () => toggleForm(removeDishForm));
+  updateStatusBtn.addEventListener("click", () => toggleForm(updateStatusForm));
+
+  // Function to toggle the display of the forms
+  function toggleForm(form) {
+    // Hide all forms
+    addDishForm.style.display = "none";
+    removeDishForm.style.display = "none";
+    updateStatusForm.style.display = "none";
+
+    // Remove the active class from all buttons
+    addDishBtn.classList.remove("active");
+    removeDishBtn.classList.remove("active");
+    updateStatusBtn.classList.remove("active");
+
+    // Show the selected form
+    form.style.display = "block";
+
+    // Add the active class to the selected button
+    if (form === addDishForm) {
+      addDishBtn.classList.add("active");
+    } else if (form === removeDishForm) {
+      removeDishBtn.classList.add("active");
+    } else if (form === updateStatusForm) {
+      updateStatusBtn.classList.add("active");
+    }
+  }
+    </script>
+</html>
